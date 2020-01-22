@@ -49,9 +49,13 @@ class Primitive:
             self.smooth = kwargs['smooth'] if 'smooth' in kwargs else False
         self.midline = kwargs['midline'] if 'midline' in kwargs else 0.5
         if 'relsize' in kwargs:
-            self.resize(kwargs['relsize'])
+            self.pull_size(kwargs['relsize'])
 
-    def resize(self, factor):
+    def pull_size(self, to):
+        # relsize = self.relsize
+        # self.relsize = (self.relsize + to) / 2
+        # factor = self.relsize / relsize
+        factor = to*1.4
         self.relsize *= factor
         self.width *= factor
         self.height *= factor
@@ -69,7 +73,11 @@ class Primitive:
                 i_x = i * 2
                 points.append(self.content[i_x] * self.relsize + self.x)
                 points.append(self.content[i_x + 1] * self.relsize + self.y)
-            canvas.create_line(points, width=self.linewidth, smooth=self.smooth)
+            # three times with different colors & thickness to approximate anti-aliasing
+            canvas.create_line(points, width=self.linewidth + .9, smooth=self.smooth, joinstyle='miter', fill='#999')
+            canvas.create_line(points, width=self.linewidth - .3, smooth=self.smooth, joinstyle='miter', fill='#444')
+            canvas.create_line(points, width=self.linewidth - .5, smooth=self.smooth, joinstyle='miter')
+            # canvas.create_line(points, width=self.linewidth, smooth=self.smooth, joinstyle='miter')
 
     def split(self, string):
         if self.kind != 't':
@@ -102,6 +110,7 @@ class Entity:
         self.content = content
         self.arrange_direc = arrange
         self.midline = 0.5
+        self.relsize = 1
         self.arrange()
 
     def arrange(self):
@@ -129,11 +138,17 @@ class Entity:
                 y += part.height
             self.height = y
 
-    def resize(self, factor):
-        self.width, self.height = self.width*factor, self.height*factor
-        self.x, self.y = self.x*factor, self.y*factor
+    def pull_size(self, to):
+        # relsize = self.relsize
+        # self.relsize = (self.relsize + to) / 2
+        # factor = self.relsize / relsize
+        factor = to*1.4
+        self.width *= factor
+        self.height *= factor
+        self.x *= factor
+        self.y *= factor
         for part in self.content:
-            part.resize(factor)
+            part.pull_size(to)
 
     def render(self, canvas):
         for part in self.content:
@@ -154,14 +169,8 @@ class Entity:
 
 class syntax:
 
-    # things that are transformed, used for units and such
-    transformed = {
-        'degC': '<m:sSup><m:e><m:r><m:t> </m:t></m:r></m:e><m:sup><m:r><m:t>∘</m:t></m:r></m:sup></m:sSup><m:r><m:rPr><m:nor/></m:rPr><m:t>C</m:t></m:r>',
-        'degF': '<m:sSup><m:e><m:r><m:t> </m:t></m:r></m:e><m:sup><m:r><m:t>∘</m:t></m:r></m:sup></m:sSup><m:r><m:rPr><m:nor/></m:rPr><m:t>F</m:t></m:r>',
-        'deg': '<m:sSup><m:e><m:r><m:t> </m:t></m:r></m:e><m:sup><m:r><m:t>∘</m:t></m:r></m:sup></m:sSup>'
-    }
-
     # some symbols
+    minus = '−'
     times = '×'
     div = '÷'
     cdot = '⋅'
@@ -179,8 +188,17 @@ class syntax:
     math_accents = MATH_ACCENTS
     primes = PRIMES
 
+    # things that are transformed, used for units and such
+    @property
+    def transformed(self):
+        return {
+            'degC': self.sup(self.txt(' '), self.txt('∘')) + self.txt('C'),
+            'degF': self.sup(self.txt(' '), self.txt('∘')) + self.txt('F'),
+            'deg': self.sup(self.txt(' '), self.txt('∘'))
+        }
+
     def txt(self, text):
-        if text in [self.times, self.div, self.cdot, '+', '-', '=']:
+        if text in [self.times, self.div, self.cdot, '+', self.minus, '=']:
             text = f' {text} '
         if text.isalpha():
             slant = 'italic'
@@ -195,9 +213,9 @@ class syntax:
         return self.txt_rom(text)
 
     def sup(self, base, s):
-        s.resize(0.7)
-        s.x = base.width * 1.2
-        base.y = s.height - 0.5*base.height
+        s.pull_size(.5)
+        s.x = base.width * 1.2  # s.y = 0
+        base.y = s.height - 0.5*base.height  # base.x = 0
         sup = Entity([base, s], False)
         sup.width = s.x + s.width
         sup.height = base.y + base.height
@@ -205,7 +223,7 @@ class syntax:
         return sup
 
     def sub(self, base, s):
-        s.resize(0.7)
+        s.pull_size(.5)
         s.x = base.width
         s.y = 0.5 * base.height
         sub = Entity([base, s], False)
@@ -228,13 +246,13 @@ class syntax:
                 width/2,
                 height,
                 width,
-                0], 'l', linewidth=1.5)
+                0], 'l', linewidth=1.2)
         line = Primitive([0, 0, base.width + OVERRIDE_LINESPACE/2, 0], 'l')
         return Entity([char, Entity([line, base], 'vert')])
 
     def summation(self, base, end):
         start = Entity([self.txt('i'), self.txt('='), self.txt('1')])
-        start.resize(0.7)
+        start.pull_size(.5)
         mark = Primitive('∑', relsize=1.5)
         end = Primitive(str(end), relsize=0.7)
         notation = Entity([end, mark, start], 'vert')
@@ -244,9 +262,8 @@ class syntax:
         return self.txt_rom(name + ' ')
 
     def frac(self, num, den):
-        linewidth = 1.2
         wmax = max([num.width, den.width])
-        line = Primitive([0, 0, wmax*linewidth, 0], 'l')
+        line = Primitive([0, 0, wmax*1.2, 0], 'l')
         part = Entity([num, line, den], 'vert')
         part.midline = num.height / (num.height + den.height)
         return part
