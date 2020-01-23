@@ -169,10 +169,10 @@ class syntax:
     cdot = '⋅'
     halfsp = ' '
     neg = '¬'
-    gt = '&gt;'
-    lt = '&lt;'
-    gte = '&ge;'
-    lte = '&le;'
+    gt = '>'
+    lt = '<'
+    gte = '≥'
+    lte = '≤'
     cdots = '⋯'
     vdots = '⋮'
     ddots = '⋱'
@@ -255,7 +255,7 @@ class syntax:
     def summation(self, base, end):
         start = Entity([self.txt('i'), self.txt('='), self.txt('1')])
         start.pull_size(.5)
-        mark = Primitive('∑', relsize=1.5)
+        mark = Primitive('∑', relsize=2)
         end = Primitive(str(end), relsize=0.7)
         notation = Entity([end, mark, start], 'vert')
         return Entity([notation, base])
