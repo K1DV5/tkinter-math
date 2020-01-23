@@ -45,7 +45,7 @@ class Primitive:
                     xes.append(self.content[i_x])
                     ys.append(self.content[i_x + 1])
                 self.width, self.height = max(xes) - min(xes), max(ys) - min(ys)
-                # if not self.height: self.height = self.linewidth * 3
+                if not self.height: self.height = self.linewidth * 3
             self.smooth = kwargs['smooth'] if 'smooth' in kwargs else False
         self.midline = kwargs['midline'] if 'midline' in kwargs else 0.5
         if 'relsize' in kwargs:
@@ -229,8 +229,14 @@ class syntax:
         s.pull_size(.5)
         return Entity([base, s], self.arrange_sub)
 
+    def arrange_rad(self, rad):
+        rad.content[1].x = rad.content[2].x = rad.content[0].width
+        rad.content[2].y = rad.content[1].height
+        rad.width = rad.content[0].width + rad.content[2].width
+        rad.height = rad.content[2].height
+
     def rad(self, base):
-        line = Primitive([0, 0, base.width + OVERRIDE_LINESPACE/2, 0], 'l')
+        line = Primitive([0, 0, base.width + OVERRIDE_LINESPACE/4, 0], 'l')
         if base.height < OVERRIDE_LINESPACE*1.4:
             char = Primitive('√')
         else:
@@ -244,7 +250,7 @@ class syntax:
                 height,
                 width,
                 0], 'l', linewidth=1.2)
-        return Entity([char, Entity([line, base], 'vert')])
+        return Entity([char, line, base], self.arrange_rad)
 
     def summation(self, base, end):
         start = Entity([self.txt('i'), self.txt('='), self.txt('1')])
