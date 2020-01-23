@@ -33,7 +33,7 @@ class Primitive:
             self.slant = kwargs['slant'] if 'slant' in kwargs else 'roman'
             self.width, self.height = MEASURE(self.content), OVERRIDE_LINESPACE
         else:  # line
-            self.linewidth = OVERRIDE_LINESPACE * 0.04
+            self.linewidth = OVERRIDE_LINESPACE * 0.03
             if 'linewidth' in kwargs:
                 self.linewidth *= kwargs['linewidth']  # must be relative
             if 'width' in kwargs or 'height' in kwargs:
@@ -45,18 +45,16 @@ class Primitive:
                     xes.append(self.content[i_x])
                     ys.append(self.content[i_x + 1])
                 self.width, self.height = max(xes) - min(xes), max(ys) - min(ys)
-                if not self.height: self.height = self.linewidth * 3
+                # if not self.height: self.height = self.linewidth * 3
             self.smooth = kwargs['smooth'] if 'smooth' in kwargs else False
         self.midline = kwargs['midline'] if 'midline' in kwargs else 0.5
         if 'relsize' in kwargs:
             self.pull_size(kwargs['relsize'])
 
     def pull_size(self, to):
-        # relsize = self.relsize
-        # self.relsize = (self.relsize + to) / 2
-        # factor = self.relsize / relsize
-        factor = to*1.4
-        self.relsize *= factor
+        relsize = self.relsize
+        self.relsize = (self.relsize + to) / 2
+        factor = self.relsize / relsize
         self.width *= factor
         self.height *= factor
         self.x *= factor
@@ -88,7 +86,7 @@ class Primitive:
         if type(other) not in [Primitive, Entity]:
             raise TypeError(type(other))
         if isinstance(other, Entity):
-            if other.arrange_direc == 'horiz':
+            if other.arrangement == 'horiz':
                 return Entity([self, *other.content])
         return Entity([self, other])
 
@@ -108,15 +106,13 @@ class Entity:
     def __init__(self, content, arrange='horiz'):
         self.x = self.y = self.width = self.height = 0
         self.content = content
-        self.arrange_direc = arrange
+        self.arrangement = arrange
         self.midline = 0.5
         self.relsize = 1
         self.arrange()
 
     def arrange(self):
-        if not self.arrange_direc:
-            return
-        if self.arrange_direc == 'horiz':
+        if self.arrangement == 'horiz':
             # calculate the height
             top, bot = [], []
             for part in self.content:
@@ -130,25 +126,22 @@ class Entity:
                 part.x, part.y = x, h_top - part.midline*part.height
                 x += part.width
             self.width = x
-        elif self.arrange_direc == 'vert':
+        elif self.arrangement == 'vert':
             y = 0
             self.width = max([part.width for part in self.content])
             for part in self.content:
                 part.x, part.y = (self.width - part.width) / 2, y
                 y += part.height
             self.height = y
+        elif callable(self.arrangement):
+            self.arrangement(self)
+        else:
+            raise TypeError('Arrangement should be "horiz", "vert", or a callable')
 
     def pull_size(self, to):
-        # relsize = self.relsize
-        # self.relsize = (self.relsize + to) / 2
-        # factor = self.relsize / relsize
-        factor = to*1.4
-        self.width *= factor
-        self.height *= factor
-        self.x *= factor
-        self.y *= factor
         for part in self.content:
             part.pull_size(to)
+        self.arrange()  # to adjust the positionings and avoid overlapping
 
     def render(self, canvas):
         for part in self.content:
@@ -158,8 +151,8 @@ class Entity:
     def __add__(self, other):
         if type(other) not in [Primitive, Entity]:
             raise TypeError()
-        if self.arrange_direc == 'horiz':
-            if isinstance(other, Entity) and other.arrange_direc == 'horiz':
+        if self.arrangement == 'horiz':
+            if isinstance(other, Entity) and other.arrangement == 'horiz':
                 return Entity([*self.content, *other.content])
             return Entity([*self.content, other])
         return Entity([self, other])
@@ -212,32 +205,36 @@ class syntax:
     def txt_math(self, text):
         return self.txt_rom(text)
 
-    def sup(self, base, s):
-        s.pull_size(.5)
+    def arrange_sup(self, sup):
+        base, s = sup.content
         s.x = base.width * 1.2  # s.y = 0
         base.y = s.height - 0.5*base.height  # base.x = 0
-        sup = Entity([base, s], False)
         sup.width = s.x + s.width
         sup.height = base.y + base.height
         sup.midline = (base.y + base.midline * base.height) / sup.height
-        return sup
 
-    def sub(self, base, s):
+    def sup(self, base, s):
         s.pull_size(.5)
+        return Entity([base, s], self.arrange_sup)
+
+    def arrange_sub(self, sub):
+        base, s = sub.content
         s.x = base.width
         s.y = 0.5 * base.height
-        sub = Entity([base, s], False)
         sub.width = s.x + s.width
         sub.height = s.y + s.height
         sub.midline = base.height*base.midline / sub.height
-        return sub
 
+    def sub(self, base, s):
+        s.pull_size(.5)
+        return Entity([base, s], self.arrange_sub)
 
     def rad(self, base):
+        line = Primitive([0, 0, base.width + OVERRIDE_LINESPACE/2, 0], 'l')
         if base.height < OVERRIDE_LINESPACE*1.4:
             char = Primitive('√')
         else:
-            width, height = OVERRIDE_LINESPACE * 0.7, base.height
+            width, height = OVERRIDE_LINESPACE * 0.7, base.height + line.height
             char = Primitive([
                 0,
                 height/2,
@@ -247,7 +244,6 @@ class syntax:
                 height,
                 width,
                 0], 'l', linewidth=1.2)
-        line = Primitive([0, 0, base.width + OVERRIDE_LINESPACE/2, 0], 'l')
         return Entity([char, Entity([line, base], 'vert')])
 
     def summation(self, base, end):
@@ -277,13 +273,15 @@ class syntax:
     def greek(self, name):
         return self.txt(GREEK_LETTERS[name])
 
-    def accent(self, acc, base):
-        acc = Primitive(MATH_ACCENTS[acc])
+    def arrange_accent(self, accent):
+        acc, base = accent.content
         acc.x = (base.width*1.5 - acc.width) / 2
         base.y = 0.2*acc.height
-        part = Entity([acc, base], False)
-        part.width, part.height = base.width, base.y + base.height
-        return part
+        accent.width, accent.height = base.width, base.y + base.height
+
+    def accent(self, acc, base):
+        acc = Primitive(MATH_ACCENTS[acc])
+        return Entity([acc, base], self.arrange_accent)
 
     def prime(self, base, prime):
         return self.sup(base, self.txt(PRIMES[prime]))
@@ -323,6 +321,37 @@ class syntax:
                           height=height*1.05)
         return Entity([left, contained, right])
 
+    def _arrange_matrix(self, matrix, cols):
+        # get the max params
+        widths = [[] for _ in range(cols)]
+        heights, row_heights = [], []
+        row = col = 0
+        i_cols = cols - 1  # max col index
+        for element in matrix.content:
+            element.row, element.col = row, col  # for arrangement
+            widths[col].append(element.width)
+            row_heights.append(element.height)
+            if col == i_cols:
+                heights.append(max(row_heights))
+                row_heights = []
+                row += 1
+                col = 0
+            else:
+                col += 1
+        widths = [max(w) for w in widths]
+        x = y = 0
+        colgap = OVERRIDE_LINESPACE*0.5
+        for element in matrix.content:
+            element.x = x + (widths[element.col] - element.width) / 2
+            element.y = y + (heights[element.row] - element.height) / 2
+            if element.col == i_cols:
+                x = 0
+                y += heights[element.row]
+            else:
+                x += widths[element.col] + colgap
+        matrix.width = sum(widths) + colgap*(len(widths) - 1)
+        matrix.height = sum(heights)
+
     def matrix(self, elmts, full=False):
         if not full:  # just a row
             return elmts
@@ -330,57 +359,60 @@ class syntax:
         # top level, full matrix
         if type(elmts[0]) != list:
             return self.delmtd(Entity(elmts, 'vert'), 1)
-        heights = []
-        # get the max params
-        widths = [[] for _ in elmts[0]]
+
+        # flatten
+        elements = []
         for row in elmts:
-            row_heights = []
-            for i, elt in enumerate(row):
-                widths[i].append(elt.width)
-                row_heights.append(elt.height)
-            heights.append(max(row_heights))
-        widths = [max(w) for w in widths]
-        elements = []  # entity members
-        y = 0
-        colgap = OVERRIDE_LINESPACE*0.5
-        for i_r, row in enumerate(elmts):
-            x = 0
-            for i_e, elt in enumerate(row):
-                elt.x = x + (widths[i_e] - elt.width) / 2
-                elt.y = y + (heights[i_r] - elt.height) / 2
-                elements.append(elt)
-                x += widths[i_e] + colgap
-            y += heights[i_r]
-        part = Entity(elements, False)
-        part.width, part.height = sum(widths) + colgap*(len(widths) - 1), sum(heights)
-        return self.delmtd(part, 1)
-      
-    def eqarray(self, eqns: list):
+            for element in row:
+                elements.append(element)
+        arrange = lambda matrix: self._arrange_matrix(matrix, len(elmts[0]))
+
+        return self.delmtd(Entity(elements, arrange), 1)
+
+    def arrange_eqarray(self, eqarray):
         # get max dims: widths1 = widths2, heights
-        w_lefts, w_rights, h_top, h_bot = [], [], [], []
+        widths, h_top, h_bot = ([], [], []), [], []
         # to get the height above/below the midline
         h = lambda x, top=True: x.height*(x.midline if top else 1-x.midline)
+        row, h_rtop, h_rbot = 0, [], []
+        for part in eqarray.content:
+            part.row = row
+            if part.col != 1:
+                h_rtop.append(h(part))
+                h_rbot.append(h(part, False))
+            widths[part.col].append(part.width)
+            if part.col == 2:
+                h_top.append(max(h_rtop))
+                h_bot.append(max(h_rbot))
+                h_rtop, h_rbot = [], []
+                row += 1
+        widths = (max(widths[0]), widths[1][0], max(widths[2]))
+        heights = tuple((top + bot for top, bot in zip(h_top, h_bot)))
+        row = y = 0
+        for part in eqarray.content:
+            if part.row > row:
+                row = part.row
+                y += heights[part.row]
+            if part.col == 0:
+                part.x = widths[0] - part.width
+            elif part.col == 1:
+                part.x = widths[0]
+            else:
+                part.x = widths[0] + widths[1]
+            part.y = y + h_top[part.row] - part.height * part.midline
+        eqarray.width = sum(widths)
+        eqarray.height = y + heights[-1]
+      
+    def eqarray(self, eqns: list):
+        parts = []
         for line in eqns:
-            h_top.append(max([h(line[0]), h(line[1])]))
-            h_bot.append(max([h(line[0], False), h(line[1], False)]))
-            w_lefts.append(line[0].width)
-            if len(line) > 1:
-                w_rights.append(line[1].width)
-        w_left, w_right = max(w_lefts), max(w_rights)
-        # align them to the =
-        lines = []
-        for i, line in enumerate(eqns):
-            elts = [line[0]]
-            width = w_left
-            line[0].x, line[0].y = w_left - line[0].width, h_top[i] - h(line[0])
-            if len(line) > 1:
-                equals = Primitive(' = ')
-                equals.x, equals.y = w_left, h_top[i] - h(equals)
-                line[1].x, line[1].y = w_left + equals.width, h_top[i] - h(line[1])
-                elts += [equals, line[1]]
-                width += equals.width + w_right
-            ent = Entity(elts, False)
-            ent.width, ent.height = width, h_top[i] + h_bot[i]
-            lines.append(ent)
-        return Entity(lines, 'vert')
+            for i, part in enumerate(line):
+                col = i * 2
+                if i:  # put an equal sign in the middle
+                    equals = Primitive(' = ')
+                    equals.col = col - 1
+                    parts.append(equals)
+                part.col = col
+                parts.append(part)
 
+        return Entity(parts, self.arrange_eqarray)
