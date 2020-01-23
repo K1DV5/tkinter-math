@@ -1,4 +1,4 @@
-# -{python %f install}
+# -{pip install -e .}
 # -{twine upload dist/*}
 # -{del dist\* | python %f sdist bdist_wheel}
 """
@@ -8,7 +8,7 @@
 
 from setuptools import setup, find_packages
 
-VERSION = '0.1.0'
+VERSION = '0.2.0'
 
 with open('README.md') as readme_file:
     readme = readme_file.read()
