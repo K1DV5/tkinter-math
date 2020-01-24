@@ -1,6 +1,6 @@
-# -{pip install -e .}
 # -{twine upload dist/*}
 # -{del dist\* | python %f sdist bdist_wheel}
+# -{pip install -e .}
 """
 :copyright: (c) 2019 by K1DV5
 :license: MIT, see LICENSE for more details.
@@ -8,7 +8,7 @@
 
 from setuptools import setup, find_packages
 
-VERSION = '0.2.1'
+VERSION = '0.2.2'
 
 with open('README.md') as readme_file:
     readme = readme_file.read()
