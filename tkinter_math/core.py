@@ -398,7 +398,7 @@ class syntax:
         for part in eqarray.content:
             if part.row > row:
                 row = part.row
-                y += heights[part.row]
+                y += heights[part.row - 1]
             if part.col == 0:
                 part.x = widths[0] - part.width
             elif part.col == 1:
