@@ -208,10 +208,14 @@ class syntax:
     def arrange_sup(self, sup):
         base, s = sup.content
         s.x = base.width + OVERRIDE_LINESPACE / 5  # s.y = 0
-        base.y = s.height - 0.5*base.height  # base.x = 0
+        base_top = base.midline * base.height
+        if base_top > s.height:
+            base.y = 0.5 * s.height
+        else:
+            base.y = s.height - 0.5*base.height  # base.x = 0
         sup.width = s.x + s.width
         sup.height = base.y + base.height
-        sup.midline = (base.y + base.midline * base.height) / sup.height
+        sup.midline = (base.y + base_top) / sup.height
 
     def sup(self, base, s):
         s.pull_size(.5)
