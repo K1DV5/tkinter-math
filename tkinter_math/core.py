@@ -93,7 +93,7 @@ class Primitive:
     def join(self, others):
         to_join = []
         for other in others:
-            to_join += [other, self]
+            to_join += [other, Primitive(self.content, self.kind)]
         return Entity(to_join[:-1])
 
     def __repr__(self):
