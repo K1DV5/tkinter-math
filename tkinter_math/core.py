@@ -60,6 +60,19 @@ class Primitive:
         self.x *= factor
         self.y *= factor
 
+    def set_size(self, width=None, height=None):
+        if height is not None:
+            factor = height / self.height
+        elif width is not None:
+            factor = width / self.width
+        else:
+            raise ValueError('One of the two params has to be given.')
+        self.relsize *= factor
+        self.width *= factor
+        self.height *= factor
+        self.x *= factor
+        self.y *= factor
+
     def render(self, canvas):
         if self.kind == 't':
             y = self.y - (LINESPACE - OVERRIDE_LINESPACE) * self.relsize / 2  # in the middle
@@ -234,10 +247,13 @@ class syntax:
         return Entity([base, s], self.arrange_sub)
 
     def arrange_rad(self, rad):
-        rad.content[1].x = rad.content[2].x = rad.content[0].width
-        rad.content[2].y = rad.content[1].height
-        rad.width = rad.content[0].width + rad.content[2].width
-        rad.height = rad.content[2].height
+        char, line, base = rad.content
+        char.set_size(height=base.height)  # make it equal to the base
+        line.set_size(width=base.width + OVERRIDE_LINESPACE / 5)
+        line.x = base.x = char.width
+        base.y = line.height
+        rad.width = char.width + base.width
+        rad.height = line.height + base.height
 
     def rad(self, base):
         line = Primitive([0, 0, base.width + OVERRIDE_LINESPACE/4, 0], 'l')
