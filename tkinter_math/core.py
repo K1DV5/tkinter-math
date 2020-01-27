@@ -269,7 +269,7 @@ class syntax:
 
     def frac(self, num, den):
         wmax = max([num.width, den.width])
-        line = Primitive([0, 0, wmax*1.2, 0], 'l')
+        line = Primitive([0, 0, wmax + OVERRIDE_LINESPACE/3, 0], 'l')
         part = Entity([num, line, den], 'vert')
         part.midline = num.height / (num.height + den.height)
         return part
