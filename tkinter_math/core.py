@@ -133,6 +133,7 @@ class Entity:
                 bot.append(part.height - top[-1])
             h_top = max(top) if top else 0
             self.height = h_top + (max(bot) if bot else 0)
+            self.midline = h_top / self.height
             # determine coords
             x = 0
             for part in self.content:
@@ -200,7 +201,8 @@ class syntax:
         return {
             'degC': self.sup(self.txt(' '), self.txt('∘')) + self.txt('C'),
             'degF': self.sup(self.txt(' '), self.txt('∘')) + self.txt('F'),
-            'deg': self.sup(self.txt(' '), self.txt('∘'))
+            'deg': self.sup(self.txt(' '), self.txt('∘')),
+            'integral': self.txt('\u222B')
         }
 
     def txt(self, text):
@@ -283,6 +285,22 @@ class syntax:
     def func_name(self, name):
         return self.txt_rom(name + ' ')
 
+    def arrange_frac(self, frac):
+        num, line, den = frac.content
+        line_add = OVERRIDE_LINESPACE / 3
+        if num.width > den.width:
+            line.set_size(width=num.width + line_add)
+        else:
+            line.set_size(width=den.width + line_add)
+        num.x = (line.width - num.width) / 2
+        den.x = (line.width - den.width) / 2
+        line.y = num.height
+        den.y = num.height + OVERRIDE_LINESPACE / 10
+        frac.height = num.height + line.height + den.height
+        frac.width = line.width
+        frac.midline = (num.height + line.height / 2) / frac.height
+        return
+
     def frac(self, num, den):
         wmax = max([num.width, den.width])
         line = Primitive([0, 0, wmax + OVERRIDE_LINESPACE/3, 0], 'l')
@@ -320,7 +338,7 @@ class syntax:
 
         width, height = OVERRIDE_LINESPACE*2/3, contained.height
         smooth = True
-        w = width/2  # width of the horizontal bar
+        w = width/2  # width of the horizontal tip
         points = [[width, 0, w, 0, w, height, width, height], [0, 0, w, 0, w, height, 0, height]]
         if kind == 1:  # []
             smooth = False
@@ -332,19 +350,10 @@ class syntax:
         elif kind == 3:  # ⌊⌋
             smooth = False
             points[0], points[1] = points[0][2:], points[1][2:]
-        left = Primitive(points[0], 'l',
-                         smooth=smooth,
-                         linewidth=2,
-                         x=width,
-                         y=height*25,
-                         width=width,
-                         height=height*1.05)
-        right = Primitive(points[1], 'l',
-                          smooth=smooth,
-                          linewidth=2,
-                          width=width,
-                         y=height*0.025,
-                          height=height*1.05)
+        left = Primitive(points[0], 'l', smooth=smooth, linewidth=2, x=width,
+                         y=height*25, width=width, height=height*1.05)
+        right = Primitive(points[1], 'l', smooth=smooth, linewidth=2,
+                          width=width, y=height*0.025, height=height*1.05)
         return Entity([left, contained, right])
 
     def _arrange_matrix(self, matrix, cols):
