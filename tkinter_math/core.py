@@ -299,12 +299,11 @@ class syntax:
         frac.height = num.height + line.height + den.height
         frac.width = line.width
         frac.midline = (num.height + line.height / 2) / frac.height
-        return
 
     def frac(self, num, den):
         wmax = max([num.width, den.width])
         line = Primitive([0, 0, wmax + OVERRIDE_LINESPACE/3, 0], 'l')
-        part = Entity([num, line, den], 'vert')
+        part = Entity([num, line, den], self.arrange_frac)
         part.midline = num.height / (num.height + den.height)
         return part
 
@@ -351,9 +350,11 @@ class syntax:
             smooth = False
             points[0], points[1] = points[0][2:], points[1][2:]
         left = Primitive(points[0], 'l', smooth=smooth, linewidth=2, x=width,
-                         y=height*25, width=width, height=height*1.05)
+                         y=height*25, width=width, height=height*1.05,
+                         midline=contained.midline)
         right = Primitive(points[1], 'l', smooth=smooth, linewidth=2,
-                          width=width, y=height*0.025, height=height*1.05)
+                          width=width, y=height*0.025, height=height*1.05,
+                          midline=contained.midline)
         return Entity([left, contained, right])
 
     def _arrange_matrix(self, matrix, cols):
