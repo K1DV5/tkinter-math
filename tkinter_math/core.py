@@ -181,7 +181,7 @@ class syntax:
     times = '×'
     div = '÷'
     cdot = '⋅'
-    halfsp = ' '
+    halfsp = '\u2006'
     neg = '¬'
     gt = '>'
     lt = '<'
