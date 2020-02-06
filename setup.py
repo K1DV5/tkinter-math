@@ -8,12 +8,13 @@
 
 from setuptools import setup, find_packages
 
-VERSION = '0.2.3'
+VERSION = '0.2.4'
 
 with open('README.md') as readme_file:
     readme = readme_file.read()
 
 setup(
+    name='tkinter-math',
     author="Kidus Adugna",
     author_email='kidusadugna@gmail.com',
     classifiers=[
@@ -31,8 +32,7 @@ setup(
     long_description=readme,
     long_description_content_type='text/markdown',
     include_package_data=True,
-    keywords='docal',
-    name='tkinter-math',
+    keywords='docal, tkinter, math',
     packages=['tkinter_math'],
     url='https://github.com/K1DV5/tkinter-math',
     version=VERSION,
