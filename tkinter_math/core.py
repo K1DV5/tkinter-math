@@ -321,6 +321,7 @@ class syntax:
         acc.x = (base.width*1.5 - acc.width) / 2
         base.y = 0.2*acc.height
         accent.width, accent.height = base.width, base.y + base.height
+        accent.midline = (base.y + base.height/2) / accent.height
 
     def accent(self, acc, base):
         acc = Primitive(MATH_ACCENTS[acc])
