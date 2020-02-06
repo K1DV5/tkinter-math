@@ -3,4 +3,5 @@ dist
 rnd
 tests
 **/__pycache__
+**/*.egg-info
 
