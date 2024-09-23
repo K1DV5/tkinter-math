@@ -8,14 +8,15 @@ fraction.render(canvas)
 """
 
 from abc import ABC
-from functools import cache, wraps
-from typing import Any, List, Tuple, Union
+from functools import cache
+from typing import Any, Iterable, Union
 
 from . import core, data
 from .core import select_font
 
 
 def set_font(**params):
+    """Shorthand to set font."""
     from tkinter.font import Font
 
     select_font(Font(**params))
@@ -37,11 +38,9 @@ class Math(ABC):
         """
         Normalize various input types to a consistent representation.
 
-        Args:
-            obj: The object to normalize.
+        :param obj: The object to normalize.
 
-        Returns:
-            Normalized representation of the input object.
+        :returns: Normalized representation of the input object.
         """
         if isinstance(obj, str):
             if obj.isalpha():
@@ -88,11 +87,9 @@ class SimpleOperation(Math):
         """
         Normalize the input object, potentially wrapping it in brackets.
 
-        Args:
-            obj: The object to normalize.
+        :param obj: The object to normalize.
 
-        Returns:
-            Normalized representation of the input object.
+        :returns: Normalized representation of the input object.
         """
         if (
             isinstance(obj, Math)
@@ -107,8 +104,7 @@ class SimpleOperation(Math):
         """
         Initialize the SimpleOperation with given arguments.
 
-        Args:
-            *args: Variable number of arguments for the operation.
+        :param *args: Variable number of arguments for the operation.
         """
         self.args = args
         self.update()
@@ -167,15 +163,14 @@ class Greek(Variable):
         """
         Initialize the Greek letter with a given name.
 
-        Args:
-            name: The name of the Greek letter.
+        :param name: The name of the Greek letter.
 
-        Raises:
-            ValueError: If the provided name is not a valid Greek letter.
+        :raises: ValueError: If the provided name is not a valid Greek letter.
         """
         if name not in data.GREEK_LETTERS:
             raise ValueError(
-                f"Invalid Greek letter {name!r} must be one of {tuple(data.GREEK_LETTERS.keys())!r}"
+                f"Invalid Greek letter {name!r} must be one of "
+                f"{tuple(data.GREEK_LETTERS.keys())!r}"
             )
         self.name = data.GREEK_LETTERS[name]
 
@@ -279,8 +274,11 @@ class Pow(BaseLiteral):
 
     def update(self) -> None:
         """Update the internal representation of the power."""
+        base = self.base
+        if not isinstance(base, (Prime, Bracket, Func, Greek, Matrix)):
+            base = Bracket(base)
         self.raw = Math.syntax().sup(
-            Math.normalize(self.base), Math.normalize(self.pow)
+            Math.normalize(base), Math.normalize(self.pow)
         )
 
 
@@ -318,12 +316,10 @@ class Accent(BaseLiteral):
         """
         Initialize the Accent.
 
-        Args:
-            base: The base symbol to be accented.
-            accent: The type of accent to apply.
+        :param base: The base symbol to be accented.
+        :param accent: The type of accent to apply.
 
-        Raises:
-            ValueError: If the provided accent is not valid.
+        :raises: ValueError: If the provided accent is not valid.
         """
         if accent not in data.MATH_ACCENTS:
             raise ValueError(
@@ -345,15 +341,15 @@ class Eq(Math):
         """
         Initialize the Equation.
 
-        Args:
-            *sides: The sides of the equation.
+        :param *sides: The sides of the equation.
 
-        Raises:
-            ValueError: If fewer than 2 sides are provided or if more than 2 sides are provided.
+        :raises: ValueError: If fewer than 2 sides are provided or if more than
+        2 sides are provided.
         """
         if len(sides) < 2:
             raise ValueError(
-                f"Eq should receive at least two equation sides, not {len(sides)}"
+                "Eq should receive at least two equation sides, not "
+                f"{len(sides)}"
             )
         elif len(sides) > 2:
             raise ValueError(
@@ -369,7 +365,7 @@ class Eq(Math):
 class Matrix(BaseLiteral):
     """Represents a matrix in mathematical expressions."""
 
-    def __init__(self, *rows: Tuple[Any, ...]):
+    def __init__(self, *rows: Iterable[Iterable[Any]]):
         """
         Initialize the Matrix.
 
@@ -434,3 +430,23 @@ class Sqrt(BaseLiteral):
     def update(self) -> None:
         """Update the internal representation of the square root."""
         self.raw = Math.syntax().rad(Math.normalize(self.content))
+
+
+class Sub(Math):
+    """Subscript value."""
+
+    def __init__(self, base: Any, sub: Any):
+        self.base = base
+        self.sub = sub
+
+    def update(self):
+        self.raw = Math.syntax().sub(Math.normalize(self.base), Math.normalize(self.sub))
+class Sup(Math):
+    """Superscript value."""
+
+    def __init__(self, base: Any, sup: Any):
+        self.base = base
+        self.sup = sup
+
+    def update(self):
+        self.raw = Math.syntax().sup(Math.normalize(self.base), Math.normalize(self.sup))

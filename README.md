@@ -15,16 +15,17 @@ the process some easier:
 
 ```python
 from tkinter import *
+
 from tkinter_math.math import *
 
 root = Tk()
-canvas = Canvas(root)
+canvas = Canvas(root, width=500, height=100)
 canvas.pack()
 
 set_font(family="Arial", size=20)  # Select font for displaying equations
 
 fib_nth_term = Eq(
-  "F_n",
+  Sub(Func("Fib"), "n"),
   Times(
     Frac(1, Sqrt(5)),
     Minus(
@@ -43,6 +44,7 @@ fib_nth_term = Eq(
 fib_nth_term.render(canvas)
 
 root.mainloop()
+
 ```
 ![](./examples/fibonacci_nth.png)
 
