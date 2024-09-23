@@ -300,10 +300,9 @@ class syntax:
     math_accents = MATH_ACCENTS
     primes = PRIMES
 
-    # things that are transformed, used for units and such
     @property
     def transformed(self) -> dict[str]:
-        """Transformed syntax."""
+        """Things that are transformed, used for units and such."""
         return {
             "degC": self.sup(self.txt(" "), self.txt("∘")) + self.txt("C"),
             "degF": self.sup(self.txt(" "), self.txt("∘")) + self.txt("F"),
@@ -397,10 +396,13 @@ class syntax:
         self, base: Entity | Primitive, end: Entity | Primitive
     ) -> Entity:
         """Create summation entity."""
+        # TODO: Add begin option to set i=x
         start = Entity([self.txt("i"), self.txt("="), self.txt("1")])
         start.pull_size(0.5)
         mark = Primitive("∑", relsize=2)
-        end = Primitive(str(end), relsize=0.7)
+        end = Primitive(
+            str(end), relsize=0.7
+        )  # TODO: add support for Entities as end
         notation = Entity([end, mark, start], "vert")
         return Entity([notation, base])
 

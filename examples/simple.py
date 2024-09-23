@@ -6,7 +6,7 @@ from tkinter_math.math import *
 
 def render_math(canv: Canvas):
     select_font(font.Font(family="Arial", size=30))
-    Eq(3, 5).render(canv)
+    Plus(3, Sqrt(Plus(4, 5))).render(canv)
 
 
 root = Tk()
