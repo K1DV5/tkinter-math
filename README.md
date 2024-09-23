@@ -44,6 +44,6 @@ fib_nth_term.render(canvas)
 
 root.mainloop()
 ```
-![](examples\fibonacci_nth.png)
+![](./examples/fibonacci_nth.png)
 
 And that's it!. You could read more about this in the docs at [./docs](./docs)
