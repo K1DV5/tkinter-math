@@ -1,6 +1,6 @@
 """Core tkinter-math functionalities."""
 import enum
-from typing import Any, Callable, Literal, Optional, TypeAlias
+from typing import Any, Callable, Iterable, Literal, Optional
 
 from .data import *
 
@@ -9,10 +9,10 @@ MEASURE = FONT = None
 LINESPACE = OVERRIDE_LINESPACE = 0
 
 
-Font = TypeAlias("Font", Any)
-PrimitiveKind = TypeAlias("PrimitiveKind", Literal["t", "l"])
-Arrangement = TypeAlias("Arrangement", Literal["horiz", "vert", Callable])
-BracketKind = TypeAlias("BracketKind", Literal[1, 2, 3])
+Font = Any
+PrimitiveKind = Literal["t", "l"]
+Arrangement = Literal["horiz", "vert", Callable]
+BracketKind = Literal[1, 2, 3]
 
 
 def calculate_linespace(font: Font) -> list:
@@ -61,6 +61,10 @@ class Primitive:
         :param height: Optional height
         :param smooth: Optional smoothness, a boolean
         """
+        if MEASURE is None:
+            raise RuntimeError(
+                "Please call tkinter_math.select_font before using it"
+            )
         self.content = content
         self.kind = kind
         self.relsize = 1
@@ -121,7 +125,7 @@ class Primitive:
         self.x *= factor
         self.y *= factor
 
-    def render(self, canvas: Canvas):
+    def render(self, canvas: Any):
         """Render the primitive on canvas."""
         if self.kind == "t":
             y = (
@@ -165,6 +169,8 @@ class Primitive:
             #     smooth=self.smooth,
             #     joinstyle="miter",
             # )
+        else:
+            raise ValueError(f"Invalid or unsupported kind {self.kind!r}.")
 
     def split(self, string: str) -> "Optional[list[Primitive]]":
         """Split primitive content to create other primitives."""
@@ -251,13 +257,13 @@ class Entity:
             part.pull_size(to)
         self.arrange()  # to adjust the positionings and avoid overlapping
 
-    def render(self, canvas: Canvas):
+    def render(self, canvas):
         """Render the Entities on specified canvas."""
         for part in self.content:
             part.x, part.y = part.x + self.x, part.y + self.y
             part.render(canvas)
 
-    def __add__(self, other: Primitive | Entity) -> "Entity":
+    def __add__(self, other: "Primitive | Entity") -> "Entity":
         """Merge other Entity or add other primitive."""
         if not isinstance(other, (Primitive, Entity)):
             raise TypeError()
@@ -276,6 +282,7 @@ class syntax:
     """Some symbols and helper methods."""
 
     minus = "−"
+    plus = "+"
     times = "×"
     div = "÷"
     cdot = "⋅"
@@ -319,7 +326,6 @@ class syntax:
         return Primitive(text, "t", slant="roman")
 
     def txt_math(self, text: str):
-        """Convert text to math?."""
         return self.txt_rom(text)
 
     def arrange_sup(self, sup: Primitive):
@@ -567,7 +573,11 @@ class syntax:
         matrix.width = sum(widths) + colgap * (len(widths) - 1)
         matrix.height = sum(heights)
 
-    def matrix(self, elmts: list[list[Entity | Primitive]] | list[Entity | Primitive], full=False):
+    def matrix(
+        self,
+        elmts: list[list[Entity | Primitive]] | list[Entity | Primitive],
+        full=False,
+    ):
         if not full:  # just a row
             return elmts
 
