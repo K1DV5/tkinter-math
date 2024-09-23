@@ -50,7 +50,7 @@
 
 ## Entity
 
-[Show source in core.py:206](../../tkinter_math/core.py#L206)
+[Show source in core.py:208](../../tkinter_math/core.py#L208)
 
 combination of text, line, (primitives) or other entities
 
@@ -67,7 +67,7 @@ class Entity:
 
 ### Entity().__add__
 
-[Show source in core.py:266](../../tkinter_math/core.py#L266)
+[Show source in core.py:268](../../tkinter_math/core.py#L268)
 
 Merge other Entity or add other primitive.
 
@@ -79,7 +79,7 @@ def __add__(self, other: "Primitive | Entity") -> "Entity": ...
 
 ### Entity().__repr__
 
-[Show source in core.py:276](../../tkinter_math/core.py#L276)
+[Show source in core.py:278](../../tkinter_math/core.py#L278)
 
 Reproducs the entity as string.
 
@@ -91,7 +91,7 @@ def __repr__(self) -> str: ...
 
 ### Entity().arrange
 
-[Show source in core.py:223](../../tkinter_math/core.py#L223)
+[Show source in core.py:225](../../tkinter_math/core.py#L225)
 
 Arrange entity's content deppending on arrangement.
 
@@ -103,7 +103,7 @@ def arrange(self): ...
 
 ### Entity().pull_size
 
-[Show source in core.py:254](../../tkinter_math/core.py#L254)
+[Show source in core.py:256](../../tkinter_math/core.py#L256)
 
 Pull contents sizes and arranges entity.
 
@@ -115,7 +115,7 @@ def pull_size(self, to: int | float): ...
 
 ### Entity().render
 
-[Show source in core.py:260](../../tkinter_math/core.py#L260)
+[Show source in core.py:262](../../tkinter_math/core.py#L262)
 
 Render the Entities on specified canvas.
 
@@ -129,7 +129,7 @@ def render(self, canvas): ...
 
 ## Primitive
 
-[Show source in core.py:37](../../tkinter_math/core.py#L37)
+[Show source in core.py:38](../../tkinter_math/core.py#L38)
 
 Text and line.
 
@@ -146,7 +146,7 @@ class Primitive:
 
 ### Primitive().__add__
 
-[Show source in core.py:184](../../tkinter_math/core.py#L184)
+[Show source in core.py:186](../../tkinter_math/core.py#L186)
 
 Add other primitive or entity.
 
@@ -158,7 +158,7 @@ def __add__(self, other: "Primitive | Entity") -> "Entity": ...
 
 ### Primitive().__repr__
 
-[Show source in core.py:200](../../tkinter_math/core.py#L200)
+[Show source in core.py:202](../../tkinter_math/core.py#L202)
 
 Reproduce the primitive as string.
 
@@ -170,7 +170,7 @@ def __repr__(self) -> str: ...
 
 ### Primitive().join
 
-[Show source in core.py:193](../../tkinter_math/core.py#L193)
+[Show source in core.py:195](../../tkinter_math/core.py#L195)
 
 Join the passed Primitives or Entities.
 
@@ -182,7 +182,7 @@ def join(self, others: "Iterable[Primitive | Entity]") -> "Entity": ...
 
 ### Primitive().pull_size
 
-[Show source in core.py:100](../../tkinter_math/core.py#L100)
+[Show source in core.py:102](../../tkinter_math/core.py#L102)
 
 Pull the primitive size and position to specified value.
 
@@ -194,7 +194,7 @@ def pull_size(self, to: int | float): ...
 
 ### Primitive().render
 
-[Show source in core.py:128](../../tkinter_math/core.py#L128)
+[Show source in core.py:130](../../tkinter_math/core.py#L130)
 
 Render the primitive on canvas.
 
@@ -206,7 +206,7 @@ def render(self, canvas: Any): ...
 
 ### Primitive().set_size
 
-[Show source in core.py:110](../../tkinter_math/core.py#L110)
+[Show source in core.py:112](../../tkinter_math/core.py#L112)
 
 Resize the primitive coords size modifying width or height.
 
@@ -220,7 +220,7 @@ def set_size(
 
 ### Primitive().split
 
-[Show source in core.py:175](../../tkinter_math/core.py#L175)
+[Show source in core.py:177](../../tkinter_math/core.py#L177)
 
 Split primitive content to create other primitives.
 
@@ -234,7 +234,7 @@ def split(self, string: str) -> "Optional[list[Primitive]]": ...
 
 ## syntax
 
-[Show source in core.py:281](../../tkinter_math/core.py#L281)
+[Show source in core.py:283](../../tkinter_math/core.py#L283)
 
 Some symbols and helper methods.
 
@@ -246,7 +246,7 @@ class syntax: ...
 
 ### syntax()._arrange_matrix
 
-[Show source in core.py:546](../../tkinter_math/core.py#L546)
+[Show source in core.py:552](../../tkinter_math/core.py#L552)
 
 Arrange matrix Primitive or Entity.
 
@@ -258,7 +258,7 @@ def _arrange_matrix(self, matrix, cols): ...
 
 ### syntax().accent
 
-[Show source in core.py:455](../../tkinter_math/core.py#L455)
+[Show source in core.py:461](../../tkinter_math/core.py#L461)
 
 Create a mathematical accent.
 
@@ -274,7 +274,7 @@ def accent(self, acc: str, base: Primitive | Entity) -> Entity: ...
 
 ### syntax().arrange_accent
 
-[Show source in core.py:447](../../tkinter_math/core.py#L447)
+[Show source in core.py:453](../../tkinter_math/core.py#L453)
 
 Arrange an accent Primitive.
 
@@ -290,7 +290,7 @@ def arrange_accent(self, accent: Primitive): ...
 
 ### syntax().arrange_eqarray
 
-[Show source in core.py:599](../../tkinter_math/core.py#L599)
+[Show source in core.py:605](../../tkinter_math/core.py#L605)
 
 #### Signature
 
@@ -300,7 +300,7 @@ def arrange_eqarray(self, eqarray): ...
 
 ### syntax().arrange_frac
 
-[Show source in core.py:413](../../tkinter_math/core.py#L413)
+[Show source in core.py:419](../../tkinter_math/core.py#L419)
 
 Arrange a fraction primitive.
 
@@ -316,7 +316,7 @@ def arrange_frac(self, frac: Primitive): ...
 
 ### syntax().arrange_rad
 
-[Show source in core.py:362](../../tkinter_math/core.py#L362)
+[Show source in core.py:364](../../tkinter_math/core.py#L364)
 
 Arrange radian Primitive.
 
@@ -332,7 +332,7 @@ def arrange_rad(self, rad: Primitive): ...
 
 ### syntax().arrange_sub
 
-[Show source in core.py:348](../../tkinter_math/core.py#L348)
+[Show source in core.py:350](../../tkinter_math/core.py#L350)
 
 Arrange subscript primitive.
 
@@ -348,7 +348,7 @@ def arrange_sub(self, sub: Primitive): ...
 
 ### syntax().arrange_sup
 
-[Show source in core.py:330](../../tkinter_math/core.py#L330)
+[Show source in core.py:332](../../tkinter_math/core.py#L332)
 
 Arrange superscript Primitive.
 
@@ -364,7 +364,7 @@ def arrange_sup(self, sup: Primitive): ...
 
 ### syntax().delmtd
 
-[Show source in core.py:464](../../tkinter_math/core.py#L464)
+[Show source in core.py:470](../../tkinter_math/core.py#L470)
 
 Wrap `contained` into brackets specified by `kind`
 
@@ -381,7 +381,7 @@ def delmtd(self, contained, kind: BracketKind = 0) -> Entity: ...
 
 ### syntax().eqarray
 
-[Show source in core.py:635](../../tkinter_math/core.py#L635)
+[Show source in core.py:641](../../tkinter_math/core.py#L641)
 
 #### Signature
 
@@ -391,7 +391,7 @@ def eqarray(self, eqns: list): ...
 
 ### syntax().frac
 
-[Show source in core.py:429](../../tkinter_math/core.py#L429)
+[Show source in core.py:435](../../tkinter_math/core.py#L435)
 
 Create a fraction Entity.
 
@@ -407,7 +407,7 @@ def frac(self, num: Entity | Primitive, den: Entity | Primitive) -> Entity: ...
 
 ### syntax().func_name
 
-[Show source in core.py:409](../../tkinter_math/core.py#L409)
+[Show source in core.py:415](../../tkinter_math/core.py#L415)
 
 Create a function name entity.
 
@@ -423,7 +423,7 @@ def func_name(self, name: str) -> Primitive: ...
 
 ### syntax().greek
 
-[Show source in core.py:443](../../tkinter_math/core.py#L443)
+[Show source in core.py:449](../../tkinter_math/core.py#L449)
 
 Create greek letter Primitive.
 
@@ -435,7 +435,7 @@ def greek(self, name: str): ...
 
 ### syntax().math_disp
 
-[Show source in core.py:437](../../tkinter_math/core.py#L437)
+[Show source in core.py:443](../../tkinter_math/core.py#L443)
 
 #### Signature
 
@@ -445,7 +445,7 @@ def math_disp(self, math): ...
 
 ### syntax().math_inln
 
-[Show source in core.py:440](../../tkinter_math/core.py#L440)
+[Show source in core.py:446](../../tkinter_math/core.py#L446)
 
 #### Signature
 
@@ -455,7 +455,7 @@ def math_inln(self, math): ...
 
 ### syntax().matrix
 
-[Show source in core.py:578](../../tkinter_math/core.py#L578)
+[Show source in core.py:584](../../tkinter_math/core.py#L584)
 
 #### Signature
 
@@ -467,7 +467,7 @@ def matrix(
 
 ### syntax().prime
 
-[Show source in core.py:460](../../tkinter_math/core.py#L460)
+[Show source in core.py:466](../../tkinter_math/core.py#L466)
 
 Create a primed Entity or Primitive.
 
@@ -483,7 +483,7 @@ def prime(self, base: Primitive | Entity, prime: str) -> Entity: ...
 
 ### syntax().rad
 
-[Show source in core.py:372](../../tkinter_math/core.py#L372)
+[Show source in core.py:374](../../tkinter_math/core.py#L374)
 
 Create a radian from primitive.
 
@@ -500,7 +500,7 @@ def rad(self, base: Primitive) -> Entity: ...
 
 ### syntax().sub
 
-[Show source in core.py:357](../../tkinter_math/core.py#L357)
+[Show source in core.py:359](../../tkinter_math/core.py#L359)
 
 Convert to subscript.
 
@@ -516,14 +516,19 @@ def sub(self, base: Entity | Primitive, sub: Entity | Primitive) -> Entity: ...
 
 ### syntax().summation
 
-[Show source in core.py:395](../../tkinter_math/core.py#L395)
+[Show source in core.py:397](../../tkinter_math/core.py#L397)
 
 Create summation entity.
 
 #### Signature
 
 ```python
-def summation(self, base: Entity | Primitive, end: Entity | Primitive) -> Entity: ...
+def summation(
+    self,
+    base: Entity | Primitive,
+    end: Entity | Primitive,
+    begin: Primitive | Entity | type(None) = None,
+) -> Entity: ...
 ```
 
 #### See also
@@ -532,7 +537,7 @@ def summation(self, base: Entity | Primitive, end: Entity | Primitive) -> Entity
 
 ### syntax().sup
 
-[Show source in core.py:343](../../tkinter_math/core.py#L343)
+[Show source in core.py:345](../../tkinter_math/core.py#L345)
 
 Converts to superscript.
 
@@ -548,7 +553,7 @@ def sup(self, base: Entity | Primitive, sup: Entity | Primitive) -> Entity: ...
 
 ### syntax().transformed
 
-[Show source in core.py:303](../../tkinter_math/core.py#L303)
+[Show source in core.py:305](../../tkinter_math/core.py#L305)
 
 Things that are transformed, used for units and such.
 
@@ -561,7 +566,7 @@ def transformed(self) -> dict[str]: ...
 
 ### syntax().txt
 
-[Show source in core.py:313](../../tkinter_math/core.py#L313)
+[Show source in core.py:315](../../tkinter_math/core.py#L315)
 
 The primitive representation of `text`.
 
@@ -577,7 +582,7 @@ def txt(self, text: str) -> Primitive: ...
 
 ### syntax().txt_math
 
-[Show source in core.py:327](../../tkinter_math/core.py#L327)
+[Show source in core.py:329](../../tkinter_math/core.py#L329)
 
 #### Signature
 
@@ -587,7 +592,7 @@ def txt_math(self, text: str): ...
 
 ### syntax().txt_rom
 
-[Show source in core.py:323](../../tkinter_math/core.py#L323)
+[Show source in core.py:325](../../tkinter_math/core.py#L325)
 
 Primitive of the text with slant='roman'.
 
@@ -605,7 +610,7 @@ def txt_rom(self, text: str) -> Primitive: ...
 
 ## calculate_linespace
 
-[Show source in core.py:18](../../tkinter_math/core.py#L18)
+[Show source in core.py:19](../../tkinter_math/core.py#L19)
 
 Calculate linespace for a font.
 
@@ -623,7 +628,7 @@ def calculate_linespace(font: Font) -> list: ...
 
 ## select_font
 
-[Show source in core.py:28](../../tkinter_math/core.py#L28)
+[Show source in core.py:29](../../tkinter_math/core.py#L29)
 
 Use this before doing anything using this module.
 

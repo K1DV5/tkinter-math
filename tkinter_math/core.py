@@ -1,4 +1,5 @@
 """Core tkinter-math functionalities."""
+
 import enum
 from typing import Any, Callable, Iterable, Literal, Optional
 
@@ -60,6 +61,7 @@ class Primitive:
         :param width: optional Width
         :param height: Optional height
         :param smooth: Optional smoothness, a boolean
+        :param relsize: Optional relative size.
         """
         if MEASURE is None:
             raise RuntimeError(
@@ -393,18 +395,22 @@ class syntax:
         return Entity([char, line, base], self.arrange_rad)
 
     def summation(
-        self, base: Entity | Primitive, end: Entity | Primitive
+        self,
+        base: Entity | Primitive,
+        end: Entity | Primitive,
+        begin: Primitive | Entity | type(None) = None,
     ) -> Entity:
         """Create summation entity."""
         # TODO: Add begin option to set i=x
-        start = Entity([self.txt("i"), self.txt("="), self.txt("1")])
-        start.pull_size(0.5)
+        start = Entity([self.txt("i"), self.txt("="), begin or self.txt("1")])
+        start.pull_size(0.3)
         mark = Primitive("∑", relsize=2)
-        end = Primitive(
-            str(end), relsize=0.7
-        )  # TODO: add support for Entities as end
+        mark.pull_size(base.height / mark.height * 2.5)
+        end.pull_size(0.3)
+
         notation = Entity([end, mark, start], "vert")
-        return Entity([notation, base])
+
+        return Entity([notation, base], "horiz")
 
     def func_name(self, name: str) -> Primitive:
         """Create a function name entity."""

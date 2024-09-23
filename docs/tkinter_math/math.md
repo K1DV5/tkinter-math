@@ -41,13 +41,18 @@
     - [SimpleOperation().update](#simpleoperation()update)
   - [Sqrt](#sqrt)
     - [Sqrt().update](#sqrt()update)
+  - [Sub](#sub)
+    - [Sub().update](#sub()update)
+  - [Sup](#sup)
+    - [Sup().update](#sup()update)
   - [Times](#times)
   - [Variable](#variable)
     - [Variable().update](#variable()update)
+  - [set_font](#set_font)
 
 ## Accent
 
-[Show source in math.py:308](../../tkinter_math/math.py#L308)
+[Show source in math.py:312](../../tkinter_math/math.py#L312)
 
 Represents accented symbols in mathematical expressions.
 
@@ -64,7 +69,7 @@ class Accent(BaseLiteral):
 
 ### Accent().update
 
-[Show source in math.py:330](../../tkinter_math/math.py#L330)
+[Show source in math.py:332](../../tkinter_math/math.py#L332)
 
 Update the internal representation of the accented symbol.
 
@@ -78,7 +83,7 @@ def update(self) -> None: ...
 
 ## BaseLiteral
 
-[Show source in math.py:117](../../tkinter_math/math.py#L117)
+[Show source in math.py:119](../../tkinter_math/math.py#L119)
 
 Base class for literal mathematical entities.
 
@@ -96,7 +101,7 @@ class BaseLiteral(Math): ...
 
 ## Bracket
 
-[Show source in math.py:222](../../tkinter_math/math.py#L222)
+[Show source in math.py:223](../../tkinter_math/math.py#L223)
 
 Represents bracketed content in mathematical expressions.
 
@@ -113,7 +118,7 @@ class Bracket(Math):
 
 ### Bracket().update
 
-[Show source in math.py:234](../../tkinter_math/math.py#L234)
+[Show source in math.py:235](../../tkinter_math/math.py#L235)
 
 Update the internal representation of the bracketed content.
 
@@ -127,7 +132,7 @@ def update(self) -> None: ...
 
 ## Div
 
-[Show source in math.py:215](../../tkinter_math/math.py#L215)
+[Show source in math.py:216](../../tkinter_math/math.py#L216)
 
 Represents division in mathematical expressions.
 
@@ -145,7 +150,7 @@ class Div(SimpleOperation): ...
 
 ## Eq
 
-[Show source in math.py:335](../../tkinter_math/math.py#L335)
+[Show source in math.py:337](../../tkinter_math/math.py#L337)
 
 Represents an equation in mathematical expressions.
 
@@ -162,7 +167,7 @@ class Eq(Math):
 
 ### Eq().update
 
-[Show source in math.py:358](../../tkinter_math/math.py#L358)
+[Show source in math.py:360](../../tkinter_math/math.py#L360)
 
 Update the internal representation of the equation.
 
@@ -176,7 +181,7 @@ def update(self) -> None: ...
 
 ## Frac
 
-[Show source in math.py:239](../../tkinter_math/math.py#L239)
+[Show source in math.py:240](../../tkinter_math/math.py#L240)
 
 Represents a fraction in mathematical expressions.
 
@@ -193,7 +198,7 @@ class Frac(BaseLiteral):
 
 ### Frac().update
 
-[Show source in math.py:253](../../tkinter_math/math.py#L253)
+[Show source in math.py:254](../../tkinter_math/math.py#L254)
 
 Update the internal representation of the fraction.
 
@@ -207,7 +212,7 @@ def update(self) -> None: ...
 
 ## Func
 
-[Show source in math.py:177](../../tkinter_math/math.py#L177)
+[Show source in math.py:178](../../tkinter_math/math.py#L178)
 
 Represents a function in mathematical expressions.
 
@@ -224,7 +229,7 @@ class Func(Variable):
 
 ### Func().update
 
-[Show source in math.py:189](../../tkinter_math/math.py#L189)
+[Show source in math.py:190](../../tkinter_math/math.py#L190)
 
 Update the internal representation of the function.
 
@@ -238,7 +243,7 @@ def update(self) -> None: ...
 
 ## Greek
 
-[Show source in math.py:157](../../tkinter_math/math.py#L157)
+[Show source in math.py:159](../../tkinter_math/math.py#L159)
 
 Represents a Greek letter in mathematical expressions.
 
@@ -257,7 +262,7 @@ class Greek(Variable):
 
 ## Literal
 
-[Show source in math.py:123](../../tkinter_math/math.py#L123)
+[Show source in math.py:125](../../tkinter_math/math.py#L125)
 
 Represents a literal value in mathematical expressions.
 
@@ -274,7 +279,7 @@ class Literal(BaseLiteral):
 
 ### Literal().update
 
-[Show source in math.py:135](../../tkinter_math/math.py#L135)
+[Show source in math.py:137](../../tkinter_math/math.py#L137)
 
 Update the internal representation of the literal.
 
@@ -288,7 +293,7 @@ def update(self) -> None: ...
 
 ## Math
 
-[Show source in math.py:18](../../tkinter_math/math.py#L18)
+[Show source in math.py:25](../../tkinter_math/math.py#L25)
 
 Base class for mathematical entities.
 
@@ -300,7 +305,7 @@ class Math(ABC): ...
 
 ### Math().entity
 
-[Show source in math.py:54](../../tkinter_math/math.py#L54)
+[Show source in math.py:59](../../tkinter_math/math.py#L59)
 
 Return the underlying entity representation.
 
@@ -313,7 +318,7 @@ def entity(self) -> Any: ...
 
 ### Math.normalize
 
-[Show source in math.py:29](../../tkinter_math/math.py#L29)
+[Show source in math.py:36](../../tkinter_math/math.py#L36)
 
 Normalize various input types to a consistent representation.
 
@@ -334,7 +339,7 @@ def normalize(obj: Union[str, int, "Math", Any]) -> Any: ...
 
 ### Math().render
 
-[Show source in math.py:60](../../tkinter_math/math.py#L60)
+[Show source in math.py:65](../../tkinter_math/math.py#L65)
 
 Render the mathematical entity on the given canvas.
 
@@ -350,7 +355,7 @@ def render(self, canv: Any) -> None: ...
 
 ### Math.syntax
 
-[Show source in math.py:23](../../tkinter_math/math.py#L23)
+[Show source in math.py:30](../../tkinter_math/math.py#L30)
 
 Return the syntax object for mathematical rendering.
 
@@ -364,7 +369,7 @@ def syntax(cls) -> Any: ...
 
 ### Math().update
 
-[Show source in math.py:70](../../tkinter_math/math.py#L70)
+[Show source in math.py:75](../../tkinter_math/math.py#L75)
 
 Update the internal representation of the mathematical entity.
 
@@ -378,7 +383,7 @@ def update(self) -> None: ...
 
 ## Matrix
 
-[Show source in math.py:363](../../tkinter_math/math.py#L363)
+[Show source in math.py:365](../../tkinter_math/math.py#L365)
 
 Represents a matrix in mathematical expressions.
 
@@ -386,7 +391,7 @@ Represents a matrix in mathematical expressions.
 
 ```python
 class Matrix(BaseLiteral):
-    def __init__(self, *rows: Tuple[Any, ...]): ...
+    def __init__(self, *rows: Iterable[Iterable[Any]]): ...
 ```
 
 #### See also
@@ -395,7 +400,7 @@ class Matrix(BaseLiteral):
 
 ### Matrix().update
 
-[Show source in math.py:388](../../tkinter_math/math.py#L388)
+[Show source in math.py:390](../../tkinter_math/math.py#L390)
 
 Update the internal representation of the matrix.
 
@@ -409,7 +414,7 @@ def update(self) -> None: ...
 
 ## Minus
 
-[Show source in math.py:201](../../tkinter_math/math.py#L201)
+[Show source in math.py:202](../../tkinter_math/math.py#L202)
 
 Represents subtraction in mathematical expressions.
 
@@ -427,7 +432,7 @@ class Minus(SimpleOperation): ...
 
 ## Plus
 
-[Show source in math.py:194](../../tkinter_math/math.py#L194)
+[Show source in math.py:195](../../tkinter_math/math.py#L195)
 
 Represents addition in mathematical expressions.
 
@@ -445,7 +450,7 @@ class Plus(SimpleOperation): ...
 
 ## Pow
 
-[Show source in math.py:260](../../tkinter_math/math.py#L260)
+[Show source in math.py:261](../../tkinter_math/math.py#L261)
 
 Represents exponentiation in mathematical expressions.
 
@@ -462,7 +467,7 @@ class Pow(BaseLiteral):
 
 ### Pow().update
 
-[Show source in math.py:274](../../tkinter_math/math.py#L274)
+[Show source in math.py:275](../../tkinter_math/math.py#L275)
 
 Update the internal representation of the power.
 
@@ -476,7 +481,7 @@ def update(self) -> None: ...
 
 ## Prime
 
-[Show source in math.py:281](../../tkinter_math/math.py#L281)
+[Show source in math.py:285](../../tkinter_math/math.py#L285)
 
 Represents prime notation in mathematical expressions.
 
@@ -493,7 +498,7 @@ class Prime(BaseLiteral):
 
 ### Prime().update
 
-[Show source in math.py:301](../../tkinter_math/math.py#L301)
+[Show source in math.py:305](../../tkinter_math/math.py#L305)
 
 Update the internal representation of the prime notation.
 
@@ -507,7 +512,7 @@ def update(self) -> None: ...
 
 ## Sigma
 
-[Show source in math.py:395](../../tkinter_math/math.py#L395)
+[Show source in math.py:397](../../tkinter_math/math.py#L397)
 
 Represents a summation in mathematical expressions.
 
@@ -524,7 +529,7 @@ class Sigma(BaseLiteral):
 
 ### Sigma().update
 
-[Show source in math.py:409](../../tkinter_math/math.py#L409)
+[Show source in math.py:411](../../tkinter_math/math.py#L411)
 
 Update the internal representation of the summation.
 
@@ -538,7 +543,7 @@ def update(self) -> None: ...
 
 ## SimpleOperation
 
-[Show source in math.py:75](../../tkinter_math/math.py#L75)
+[Show source in math.py:80](../../tkinter_math/math.py#L80)
 
 Base class for simple mathematical operations.
 
@@ -555,7 +560,7 @@ class SimpleOperation(Math):
 
 ### SimpleOperation().normalize
 
-[Show source in math.py:81](../../tkinter_math/math.py#L81)
+[Show source in math.py:86](../../tkinter_math/math.py#L86)
 
 Normalize the input object, potentially wrapping it in brackets.
 
@@ -575,7 +580,7 @@ def normalize(self, obj: Any) -> Any: ...
 
 ### SimpleOperation().update
 
-[Show source in math.py:110](../../tkinter_math/math.py#L110)
+[Show source in math.py:112](../../tkinter_math/math.py#L112)
 
 Update the internal representation of the operation.
 
@@ -589,7 +594,7 @@ def update(self) -> None: ...
 
 ## Sqrt
 
-[Show source in math.py:416](../../tkinter_math/math.py#L416)
+[Show source in math.py:418](../../tkinter_math/math.py#L418)
 
 Represents a square root in mathematical expressions.
 
@@ -606,7 +611,7 @@ class Sqrt(BaseLiteral):
 
 ### Sqrt().update
 
-[Show source in math.py:428](../../tkinter_math/math.py#L428)
+[Show source in math.py:430](../../tkinter_math/math.py#L430)
 
 Update the internal representation of the square root.
 
@@ -618,9 +623,67 @@ def update(self) -> None: ...
 
 
 
+## Sub
+
+[Show source in math.py:435](../../tkinter_math/math.py#L435)
+
+Subscript value.
+
+#### Signature
+
+```python
+class Sub(Math):
+    def __init__(self, base: Any, sub: Any): ...
+```
+
+#### See also
+
+- [Math](#math)
+
+### Sub().update
+
+[Show source in math.py:442](../../tkinter_math/math.py#L442)
+
+#### Signature
+
+```python
+def update(self): ...
+```
+
+
+
+## Sup
+
+[Show source in math.py:444](../../tkinter_math/math.py#L444)
+
+Superscript value.
+
+#### Signature
+
+```python
+class Sup(Math):
+    def __init__(self, base: Any, sup: Any): ...
+```
+
+#### See also
+
+- [Math](#math)
+
+### Sup().update
+
+[Show source in math.py:451](../../tkinter_math/math.py#L451)
+
+#### Signature
+
+```python
+def update(self): ...
+```
+
+
+
 ## Times
 
-[Show source in math.py:208](../../tkinter_math/math.py#L208)
+[Show source in math.py:209](../../tkinter_math/math.py#L209)
 
 Represents multiplication in mathematical expressions.
 
@@ -638,7 +701,7 @@ class Times(SimpleOperation): ...
 
 ## Variable
 
-[Show source in math.py:140](../../tkinter_math/math.py#L140)
+[Show source in math.py:142](../../tkinter_math/math.py#L142)
 
 Represents a variable in mathematical expressions.
 
@@ -655,7 +718,7 @@ class Variable(BaseLiteral):
 
 ### Variable().update
 
-[Show source in math.py:152](../../tkinter_math/math.py#L152)
+[Show source in math.py:154](../../tkinter_math/math.py#L154)
 
 Update the internal representation of the variable.
 
@@ -663,4 +726,18 @@ Update the internal representation of the variable.
 
 ```python
 def update(self) -> None: ...
+```
+
+
+
+## set_font
+
+[Show source in math.py:18](../../tkinter_math/math.py#L18)
+
+Shorthand to set font.
+
+#### Signature
+
+```python
+def set_font(**params): ...
 ```
