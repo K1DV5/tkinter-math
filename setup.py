@@ -6,36 +6,42 @@
 :license: MIT, see LICENSE for more details.
 """
 
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
-VERSION = '0.2.4'
+VERSION = "0.2.4"
 
-with open('README.md') as readme_file:
+with open("README.md") as readme_file:
     readme = readme_file.read()
 
+extra_docs = ("handsdown",)
+
 setup(
-    name='tkinter-math',
+    name="tkinter-math",
     author="Kidus Adugna",
-    author_email='kidusadugna@gmail.com',
+    author_email="kidusadugna@gmail.com",
     classifiers=[
-    #     'Development Status :: 5 - Production/Stable',
-        'Intended Audience :: Developers',
-        'License :: OSI Approved :: MIT License',
-        'Natural Language :: English',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7',
-        'Programming Language :: Python :: 3.8',
+        # 'Development Status :: 5 - Production/Stable',
+        "Intended Audience :: Developers",
+        "License :: OSI Approved :: MIT License",
+        "Natural Language :: English",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13",
     ],
     description="render math on tkinter canvas",
     license="MIT license",
     long_description=readme,
-    long_description_content_type='text/markdown',
+    long_description_content_type="text/markdown",
     include_package_data=True,
-    keywords='docal, tkinter, math',
-    packages=['tkinter_math'],
-    url='https://github.com/K1DV5/tkinter-math',
+    keywords="docal, tkinter, math",
+    packages=["tkinter_math"],
+    url="https://github.com/K1DV5/tkinter-math",
     version=VERSION,
     # zip_safe=False,
 )
-
